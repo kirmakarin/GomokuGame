@@ -1,6 +1,7 @@
 package pw.netbox.server;
 
 import pw.netbox.common.Player;
+import pw.netbox.common.commandImpl.StandardOutput;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -31,11 +32,14 @@ public class Server {
         startServer(allPlayers);
         while (working) {
             try {
-                allPlayers.add(new Player(server.accept()));
+                Player newPlayer = new Player(server.accept());
+                allPlayers.add(newPlayer);
                 System.out.println("New Player");
-                //Уведомить всех играков без пары, что появился новый игрок
+
                 for (Player player : allPlayers) {
-                    player.sendMessage("New player , if u want to play with him \n");
+                    if (!player.isHasGame()) {
+                        player.sendMessage(new StandardOutput("u can join to him \n"));
+                    }
                 }
 
 

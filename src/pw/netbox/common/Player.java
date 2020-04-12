@@ -5,37 +5,38 @@ import java.net.Socket;
 
 public class Player {
     private Socket socket;
-    private BufferedReader in;
-    private BufferedWriter out;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
     private boolean hasGame = false;
 
     public Player(Socket socket) {
         this.socket = socket;
         try {
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
             new ReceiveMessage().start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void sendMessage(String message){
+
+    public void sendMessage(Command message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setMessage(message);
         sendMessage.start();
     }
 
     private class SendMessage extends Thread {
-        String message;
+        Command message;
 
-        public void setMessage(String message) {
+        public void setMessage(Command message) {
             this.message = message;
         }
 
         @Override
         public void run() {
             try {
-                out.write(message);
+                out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -48,13 +49,17 @@ public class Player {
         public void run() {
             while (true) {
                 try {
-                    String message = in.readLine();
-                    System.out.println(message);
+                    Command message = (Command) in.readObject();
+                    message.execute();
 
-                } catch (IOException e) {
+                } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    public boolean isHasGame() {
+        return hasGame;
     }
 }
