@@ -1,7 +1,7 @@
 package pw.netbox.server;
 
 import pw.netbox.common.Player;
-import pw.netbox.common.commandImpl.StandardOutput;
+import pw.netbox.common.commandImpl.InviteToGameCommand;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -14,13 +14,17 @@ public class Server {
 
     private static boolean working = true;
 
-    private static void startServer(List<Player> allServerPlayers) {
+    private static void startServer(List<Player> allServerPlayers, List<Game> games) {
         System.out.println("Server start");
         try {
             server = new ServerSocket(4004);
             Socket clientSocket = server.accept();
             System.out.println("1st Player");
-            allServerPlayers.add(new Player(clientSocket));
+            Player player = new Player(clientSocket);
+            allServerPlayers.add(player);
+            games.add(new Game(player));
+            games.get(0).setRoomNumber(0);
+            player.setHasGame(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -29,18 +33,20 @@ public class Server {
     public static void main(String[] args) {
         List<Player> allPlayers = new ArrayList<>();
         List<Game> games = new ArrayList<>();
-        startServer(allPlayers);
+        startServer(allPlayers, games);
         while (working) {
             try {
                 Player newPlayer = new Player(server.accept());
+                Player.setGames(games);
                 allPlayers.add(newPlayer);
                 System.out.println("New Player");
 
                 for (Player player : allPlayers) {
                     if (!player.isHasGame()) {
-                        player.sendMessage(new StandardOutput("u can join to him \n"));
+                        player.sendMessage(new InviteToGameCommand(games));
                     }
                 }
+                //TODO: Add logic for create new room and don't show a full room
 
 
             } catch (IOException e) {

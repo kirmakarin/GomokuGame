@@ -2,15 +2,23 @@ package pw.netbox.server;
 
 import pw.netbox.common.Player;
 
+import java.io.Serializable;
+
 import static pw.netbox.common.Constans.BOARD_SIZE;
 
-public class Game {
-    Player player1;
-    Player player2;
+public class Game implements Serializable {
+    private int roomNumber;
+    private transient Player player1;
+    private transient Player player2;
     char[][] board = new char[BOARD_SIZE][BOARD_SIZE];
 
+    public Game(Player player1) {
+        this.player1 = player1;
+        initBoard();
+    }
+
     private void initBoard() {
-        for (int i = 0; i <= BOARD_SIZE; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 board[i][j] = '0';
             }
@@ -55,5 +63,26 @@ public class Game {
             }
         }
         return false;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public void setPlayer2(Player player2) {
+        this.player2 = player2;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "roomNumber=" + roomNumber +
+                ", player1=" + player1 +
+                ", player2=" + player2 +
+                '}';
     }
 }
