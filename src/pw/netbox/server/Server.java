@@ -1,7 +1,6 @@
 package pw.netbox.server;
 
 import pw.netbox.common.Player;
-import pw.netbox.common.commandImpl.StandardOutputCommand;
 import pw.netbox.common.commandImpl.clientOnly.InviteToGameCommand;
 
 import java.io.IOException;
@@ -12,40 +11,26 @@ import java.util.List;
 
 public class Server {
     private static ServerSocket server;
-
     public static List<Game> games = new ArrayList<>();
-    public static boolean needNewGame = false;
-    private static Socket clientSocket;
+    public static boolean needNewGame = true;
+    private static int gameCount = 0;
+
     public static List<Player> allPlayers = new ArrayList<>();
 
-    private static void startServer() {
-        System.out.println("Server start");
-        try {
-            server = new ServerSocket(4004);
-            clientSocket = server.accept();
-            System.out.println("1st Player");
-            Player player = new Player(clientSocket);
-            allPlayers.add(player);
-            player.sendMessage(new StandardOutputCommand("I have game, room number is 0 \n"));
-            games.add(new Game(player));
-            games.get(0).setRoomNumber(0);
-            player.setHasGame(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private static Socket clientSocket;
 
-    public static void main(String[] args) {
-        startServer();
+    public static void main(String[] args) throws IOException {
+        System.out.println("Server is working");
+        server = new ServerSocket(4004);
         while (true) {
             try {
                 clientSocket = server.accept();
                 Player newPlayer = new Player(clientSocket);
                 if (needNewGame) {
-                    Game newGame = new Game(newPlayer);
+                    Game newGame = new Game();
+                    newGame.setRoomNumber(gameCount);
+                    gameCount++;
                     games.add(newGame);
-                    newGame.setRoomNumber(games.indexOf(newGame));
-                    newPlayer.setHasGame(true);
                     needNewGame = false;
                 }
                 Player.setGames(games);

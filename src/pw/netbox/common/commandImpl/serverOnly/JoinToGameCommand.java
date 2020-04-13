@@ -23,23 +23,21 @@ public class JoinToGameCommand extends Command {
     public void execute(Player player) {
         List<Game> games = Player.getGames();
         Game necessaryGame = games.get(roomNumber);
-        necessaryGame.setPlayer2(player);
+        if (necessaryGame.getPlayer1() == null) {
+            necessaryGame.setPlayer1(player);
+            player.setGame(necessaryGame);
 
-        Player player1 = necessaryGame.getPlayer1();
-        Player player2 = necessaryGame.getPlayer2();
+        } else {
+            necessaryGame.setPlayer2(player);
+            player.setGame(necessaryGame);
 
-        necessaryGame.setGameStart(true);
-        //set Room Number
-        player1.sendMessage(new StartGameCommand(necessaryGame.getRoomNumber()));
-        player2.sendMessage(new StartGameCommand(necessaryGame.getRoomNumber()));
-        //Set game into game
-        player1.setGame(necessaryGame);
-        player2.setGame(necessaryGame);
-        //Set init param
-        player1.sendMessage(new SetInitialParamsCommand(FIRST_PLAYER_COLOR, true));
-        player2.sendMessage(new SetInitialParamsCommand(SECOND_PLAYER_COLOR, false));
+            necessaryGame.getPlayer1().sendMessage(new StartGameCommand(necessaryGame.getRoomNumber()));
+            necessaryGame.getPlayer2().sendMessage(new StartGameCommand(necessaryGame.getRoomNumber()));
 
-        if (!Server.needNewGame) {
+            necessaryGame.getPlayer1().sendMessage(new SetInitialParamsCommand(FIRST_PLAYER_COLOR, true));
+            necessaryGame.getPlayer2().sendMessage(new SetInitialParamsCommand(SECOND_PLAYER_COLOR, false));
+            necessaryGame.setGameStart(true);
+
             Server.needNewGame = true;
         }
     }

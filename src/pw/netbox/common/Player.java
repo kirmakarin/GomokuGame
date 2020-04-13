@@ -72,10 +72,13 @@ public class Player implements Serializable {
                     Command message = (Command) in.readObject();
                     message.execute(player);
 
-                } catch (IOException | ClassNotFoundException e) {
+                } catch (IOException e) {
                     Server.games.remove(player.game);
                     Server.allPlayers.remove(player);
                     this.destroy();
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
         }
