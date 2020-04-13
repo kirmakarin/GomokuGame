@@ -37,7 +37,7 @@ public class JoinToGameCommand extends Command {
         player2.setGame(necessaryGame);
         //Set init param
         player1.sendMessage(new SetInitialParamsCommand(FIRST_PLAYER_COLOR, true));
-        player2.sendMessage(new SetInitialParamsCommand(SECOND_PLAYER_COLOR,false));
+        player2.sendMessage(new SetInitialParamsCommand(SECOND_PLAYER_COLOR, false));
 
         if (!Server.needNewGame) {
             Server.needNewGame = true;

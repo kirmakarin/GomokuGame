@@ -1,6 +1,7 @@
 package pw.netbox.client;
 
 import pw.netbox.common.Player;
+import pw.netbox.common.commandImpl.serverOnly.EndGameCommand;
 import pw.netbox.common.commandImpl.serverOnly.MoveCommand;
 
 import javax.swing.*;
@@ -71,6 +72,10 @@ public class ClientForm {
         board[x][y].setBackground(color);
     }
 
+    public static void setMessageLabelText(String text) {
+        ClientForm.messageLabel.setText(text);
+    }
+
     private static int hasWinner(Player player) {
         //horizontally
         for (int i = 0; i <= BOARD_SIZE - 5; i++) {
@@ -123,12 +128,15 @@ public class ClientForm {
         switch (hasWinner(player)) {
             case DRAW:
                 messageLabel.setText("DRAW");
+                player.sendMessage(new EndGameCommand("DRAW"));
                 break;
             case WIN:
                 messageLabel.setText("WIN");
+                player.sendMessage(new EndGameCommand("LOSE"));
                 break;
             case LOSE:
                 messageLabel.setText("LOSE");
+                player.sendMessage(new EndGameCommand("WIN"));
                 break;
 
         }

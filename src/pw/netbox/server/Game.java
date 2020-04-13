@@ -79,10 +79,6 @@ public class Game implements Serializable {
         return player1;
     }
 
-    public void setPlayer1(Player player1) {
-        this.player1 = player1;
-    }
-
     public Player getPlayer2() {
         return player2;
     }

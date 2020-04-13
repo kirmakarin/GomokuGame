@@ -18,7 +18,6 @@ public class Player implements Serializable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-    private int roomNumber;
     private Color color;
     private boolean hasGame = false;
     private boolean isMyTurn;
@@ -124,15 +123,15 @@ public class Player implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Player)) return false;
         Player player = (Player) o;
-        return roomNumber == player.roomNumber &&
-                isHasGame() == player.isHasGame() &&
-                getGame().equals(player.getGame()) &&
-                socket.equals(player.socket) &&
+        return isHasGame() == player.isHasGame() &&
+                isMyTurn() == player.isMyTurn() &&
+                in.equals(player.in) &&
+                out.equals(player.out) &&
                 Objects.equals(getColor(), player.getColor());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(roomNumber, getColor(), isHasGame());
+        return Objects.hash(getColor(), isHasGame(), isMyTurn());
     }
 }
