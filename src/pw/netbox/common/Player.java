@@ -1,6 +1,7 @@
 package pw.netbox.common;
 
 import pw.netbox.server.Game;
+import pw.netbox.server.Server;
 
 import java.awt.*;
 import java.io.IOException;
@@ -72,7 +73,9 @@ public class Player implements Serializable {
                     message.execute(player);
 
                 } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                    Server.games.remove(player.game);
+                    Server.allPlayers.remove(player);
+                    this.destroy();
                 }
             }
         }

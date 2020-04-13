@@ -1,6 +1,7 @@
 package pw.netbox.server;
 
 import pw.netbox.common.Player;
+import pw.netbox.common.commandImpl.StandardOutputCommand;
 import pw.netbox.common.commandImpl.clientOnly.InviteToGameCommand;
 
 import java.io.IOException;
@@ -14,15 +15,18 @@ public class Server {
 
     public static List<Game> games = new ArrayList<>();
     public static boolean needNewGame = false;
+    private static Socket clientSocket;
+    public static List<Player> allPlayers = new ArrayList<>();
 
-    private static void startServer(List<Player> allServerPlayers) {
+    private static void startServer() {
         System.out.println("Server start");
         try {
             server = new ServerSocket(4004);
-            Socket clientSocket = server.accept();
+            clientSocket = server.accept();
             System.out.println("1st Player");
             Player player = new Player(clientSocket);
-            allServerPlayers.add(player);
+            allPlayers.add(player);
+            player.sendMessage(new StandardOutputCommand("I have game, room number is 0 \n"));
             games.add(new Game(player));
             games.get(0).setRoomNumber(0);
             player.setHasGame(true);
@@ -32,11 +36,11 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        List<Player> allPlayers = new ArrayList<>();
-        startServer(allPlayers);
+        startServer();
         while (true) {
             try {
-                Player newPlayer = new Player(server.accept());
+                clientSocket = server.accept();
+                Player newPlayer = new Player(clientSocket);
                 if (needNewGame) {
                     Game newGame = new Game(newPlayer);
                     games.add(newGame);
@@ -53,7 +57,6 @@ public class Server {
                         player.sendMessage(new InviteToGameCommand(games));
                     }
                 }
-                //TODO: Add logic for create new room and don't show a full room
 
 
             } catch (IOException e) {
