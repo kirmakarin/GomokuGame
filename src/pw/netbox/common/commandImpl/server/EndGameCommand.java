@@ -1,8 +1,8 @@
-package pw.netbox.common.commandImpl.serverOnly;
+package pw.netbox.common.commandImpl.server;
 
 import pw.netbox.common.Command;
 import pw.netbox.common.Player;
-import pw.netbox.common.commandImpl.clientOnly.ShowMessageCommand;
+import pw.netbox.common.commandImpl.client.ShowMessageCommand;
 import pw.netbox.server.Game;
 
 public class EndGameCommand extends Command {

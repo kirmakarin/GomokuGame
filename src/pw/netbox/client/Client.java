@@ -1,7 +1,7 @@
 package pw.netbox.client;
 
 import pw.netbox.common.Player;
-import pw.netbox.common.commandImpl.serverOnly.JoinToGameCommand;
+import pw.netbox.common.commandImpl.server.JoinToGameCommand;
 
 import java.io.BufferedReader;
 import java.io.IOException;

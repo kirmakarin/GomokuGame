@@ -1,8 +1,8 @@
 package pw.netbox.client;
 
 import pw.netbox.common.Player;
-import pw.netbox.common.commandImpl.serverOnly.EndGameCommand;
-import pw.netbox.common.commandImpl.serverOnly.MoveCommand;
+import pw.netbox.common.commandImpl.server.EndGameCommand;
+import pw.netbox.common.commandImpl.server.MoveCommand;
 
 import javax.swing.*;
 import java.awt.*;

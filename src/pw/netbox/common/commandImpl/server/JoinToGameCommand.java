@@ -1,9 +1,10 @@
-package pw.netbox.common.commandImpl.serverOnly;
+package pw.netbox.common.commandImpl.server;
 
 import pw.netbox.common.Command;
 import pw.netbox.common.Player;
-import pw.netbox.common.commandImpl.clientOnly.SetInitialParamsCommand;
-import pw.netbox.common.commandImpl.clientOnly.StartGameCommand;
+import pw.netbox.common.commandImpl.client.InviteToGameCommand;
+import pw.netbox.common.commandImpl.client.SetInitialParamsCommand;
+import pw.netbox.common.commandImpl.client.StartGameCommand;
 import pw.netbox.server.Game;
 import pw.netbox.server.Server;
 
@@ -39,6 +40,12 @@ public class JoinToGameCommand extends Command {
             necessaryGame.setGameStart(true);
 
             Server.needNewGame = true;
+            Server.createNewGame();
+            for (Player p : Server.allPlayers) {
+                if (!p.isHasGame()) {
+                    p.sendMessage(new InviteToGameCommand(games));
+                }
+            }
         }
     }
 }

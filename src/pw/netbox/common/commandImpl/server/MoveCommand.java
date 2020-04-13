@@ -1,8 +1,8 @@
-package pw.netbox.common.commandImpl.serverOnly;
+package pw.netbox.common.commandImpl.server;
 
 import pw.netbox.common.Command;
 import pw.netbox.common.Player;
-import pw.netbox.common.commandImpl.clientOnly.YourTurnCommand;
+import pw.netbox.common.commandImpl.client.YourTurnCommand;
 import pw.netbox.server.Game;
 
 import static pw.netbox.common.Constans.FIRST_PLAYER_COLOR;

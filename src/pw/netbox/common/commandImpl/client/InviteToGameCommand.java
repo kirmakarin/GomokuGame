@@ -1,4 +1,4 @@
-package pw.netbox.common.commandImpl.clientOnly;
+package pw.netbox.common.commandImpl.client;
 
 import pw.netbox.common.commandImpl.StandardOutputCommand;
 import pw.netbox.server.Game;
