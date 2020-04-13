@@ -12,9 +12,10 @@ import java.util.List;
 public class Server {
     private static ServerSocket server;
 
+    public static List<Game> games = new ArrayList<>();
     public static boolean needNewGame = false;
 
-    private static void startServer(List<Player> allServerPlayers, List<Game> games) {
+    private static void startServer(List<Player> allServerPlayers) {
         System.out.println("Server start");
         try {
             server = new ServerSocket(4004);
@@ -32,8 +33,7 @@ public class Server {
 
     public static void main(String[] args) {
         List<Player> allPlayers = new ArrayList<>();
-        List<Game> games = new ArrayList<>();
-        startServer(allPlayers, games);
+        startServer(allPlayers);
         while (true) {
             try {
                 Player newPlayer = new Player(server.accept());

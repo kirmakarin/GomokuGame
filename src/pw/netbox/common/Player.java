@@ -2,12 +2,14 @@ package pw.netbox.common;
 
 import pw.netbox.server.Game;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.List;
+import java.util.Objects;
 
 public class Player implements Serializable {
     private transient static List<Game> games;
@@ -16,7 +18,10 @@ public class Player implements Serializable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
+    private int roomNumber;
+    private Color color;
     private boolean hasGame = false;
+    private boolean isMyTurn;
 
     public Player(Socket socket) {
         this.socket = socket;
@@ -96,5 +101,38 @@ public class Player implements Serializable {
 
     public static void setGames(List<Game> games) {
         Player.games = games;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public boolean isMyTurn() {
+        return isMyTurn;
+    }
+
+    public void setMyTurn(boolean myTurn) {
+        isMyTurn = myTurn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player)) return false;
+        Player player = (Player) o;
+        return roomNumber == player.roomNumber &&
+                isHasGame() == player.isHasGame() &&
+                getGame().equals(player.getGame()) &&
+                socket.equals(player.socket) &&
+                Objects.equals(getColor(), player.getColor());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomNumber, getColor(), isHasGame());
     }
 }

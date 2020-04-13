@@ -1,14 +1,14 @@
 package pw.netbox.client;
 
 import pw.netbox.common.Player;
-import pw.netbox.common.commandImpl.StandardOutputCommand;
+import pw.netbox.common.commandImpl.serverOnly.MoveCommand;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static pw.netbox.common.Constans.BOARD_SIZE;
+import static pw.netbox.common.Constans.*;
 
 public class ClientForm {
     private static JFrame frame = new JFrame();
@@ -32,7 +32,15 @@ public class ClientForm {
                 board[i][j].addMouseListener(new MouseAdapter() {
                     public void mousePressed(MouseEvent e) {
                         currentSquare = board[x][y];
-                        player.sendMessage(new StandardOutputCommand(String.valueOf(x) + " " + String.valueOf(y) + "\n"));
+                        if (player.isMyTurn() && currentSquare.getBackground().equals(Color.white)) {
+                            currentSquare.setBackground(player.getColor());
+                            player.setMyTurn(false);
+                            if (hasWinner(player) == CONTINUE_THE_GAME) {
+                                player.sendMessage(new MoveCommand(x, y));
+                            } else {
+                                endGame(player);
+                            }
+                        }
                     }
                 });
                 boardPanel.add(board[i][j]);
@@ -52,6 +60,77 @@ public class ClientForm {
         Square() {
             setBackground(Color.white);
             add(label);
+        }
+    }
+
+    public static Square[][] getBoard() {
+        return board;
+    }
+
+    public static void setColor(Color color, int x, int y) {
+        board[x][y].setBackground(color);
+    }
+
+    private static int hasWinner(Player player) {
+        //horizontally
+        for (int i = 0; i <= BOARD_SIZE - 5; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (!board[i][j].getBackground().equals(Color.white) &&
+                        board[i + 1][j].getBackground().equals(board[i][j].getBackground()) &&
+                        board[i + 2][j].getBackground().equals(board[i][j].getBackground()) &&
+                        board[i + 3][j].getBackground().equals(board[i][j].getBackground()) &&
+                        board[i + 4][j].getBackground().equals(board[i][j].getBackground())) {
+                    return board[i][j].getBackground().equals(player.getColor()) ? WIN : LOSE;
+                }
+            }
+        }
+        //vertically
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j <= BOARD_SIZE - 5; j++) {
+                if (!board[i][j].getBackground().equals(Color.white) &&
+                        board[i][j + 1].getBackground().equals(board[i][j].getBackground()) &&
+                        board[i][j + 2].getBackground().equals(board[i][j].getBackground()) &&
+                        board[i][j + 3].getBackground().equals(board[i][j].getBackground()) &&
+                        board[i][j + 4].getBackground().equals(board[i][j].getBackground())) {
+                    return board[i][j].getBackground().equals(player.getColor()) ? WIN : LOSE;
+                }
+            }
+        }
+        // Check first diagonal
+        for (int i = 0; i <= BOARD_SIZE - 5; i++) {
+            for (int j = 0; j <= BOARD_SIZE - 5; j++) {
+                if (!board[i][j].getBackground().equals(Color.white) &&
+                        board[i + 1][j + 1].getBackground().equals(board[i][j].getBackground()) &&
+                        board[i + 2][j + 2].getBackground().equals(board[i][j].getBackground()) &&
+                        board[i + 3][j + 3].getBackground().equals(board[i][j].getBackground()) &&
+                        board[i + 4][j + 4].getBackground().equals(board[i][j].getBackground())) {
+                    return board[i][j].getBackground().equals(player.getColor()) ? WIN : LOSE;
+                }
+            }
+        }
+        //Is board fill
+        for (int i = 0; i <= BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (!board[i][j].getBackground().equals(Color.white)) {
+                    return CONTINUE_THE_GAME;
+                }
+            }
+        }
+        return DRAW;
+    }
+
+    private static void endGame(Player player) {
+        switch (hasWinner(player)) {
+            case DRAW:
+                messageLabel.setText("DRAW");
+                break;
+            case WIN:
+                messageLabel.setText("WIN");
+                break;
+            case LOSE:
+                messageLabel.setText("LOSE");
+                break;
+
         }
     }
 }

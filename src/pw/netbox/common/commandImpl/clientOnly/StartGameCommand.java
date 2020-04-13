@@ -1,4 +1,4 @@
-package pw.netbox.common.commandImpl;
+package pw.netbox.common.commandImpl.clientOnly;
 
 import pw.netbox.client.ClientForm;
 import pw.netbox.common.Command;
