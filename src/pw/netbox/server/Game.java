@@ -10,7 +10,9 @@ public class Game implements Serializable {
     private int roomNumber;
     private transient Player player1;
     private transient Player player2;
-    char[][] board = new char[BOARD_SIZE][BOARD_SIZE];
+    private char[][] board = new char[BOARD_SIZE][BOARD_SIZE];
+
+    private boolean isGameStart = false;
 
     public Game(Player player1) {
         this.player1 = player1;
@@ -73,8 +75,28 @@ public class Game implements Serializable {
         this.roomNumber = roomNumber;
     }
 
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public void setPlayer1(Player player1) {
+        this.player1 = player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
     public void setPlayer2(Player player2) {
         this.player2 = player2;
+    }
+
+    public boolean isGameStart() {
+        return isGameStart;
+    }
+
+    public void setGameStart(boolean gameStart) {
+        isGameStart = gameStart;
     }
 
     @Override

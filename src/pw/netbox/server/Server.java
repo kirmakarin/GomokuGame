@@ -1,7 +1,7 @@
 package pw.netbox.server;
 
 import pw.netbox.common.Player;
-import pw.netbox.common.commandImpl.InviteToGameCommand;
+import pw.netbox.common.commandImpl.clientOnly.InviteToGameCommand;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,7 +12,7 @@ import java.util.List;
 public class Server {
     private static ServerSocket server;
 
-    private static boolean working = true;
+    public static boolean needNewGame = false;
 
     private static void startServer(List<Player> allServerPlayers, List<Game> games) {
         System.out.println("Server start");
@@ -34,9 +34,16 @@ public class Server {
         List<Player> allPlayers = new ArrayList<>();
         List<Game> games = new ArrayList<>();
         startServer(allPlayers, games);
-        while (working) {
+        while (true) {
             try {
                 Player newPlayer = new Player(server.accept());
+                if (needNewGame) {
+                    Game newGame = new Game(newPlayer);
+                    games.add(newGame);
+                    newGame.setRoomNumber(games.indexOf(newGame));
+                    newPlayer.setHasGame(true);
+                    needNewGame = false;
+                }
                 Player.setGames(games);
                 allPlayers.add(newPlayer);
                 System.out.println("New Player");
@@ -51,9 +58,6 @@ public class Server {
 
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-            if (allPlayers.isEmpty()) {
-                working = false;
             }
         }
     }

@@ -1,5 +1,8 @@
 package pw.netbox.client;
 
+import pw.netbox.common.Player;
+import pw.netbox.common.commandImpl.StandardOutputCommand;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -8,13 +11,14 @@ import java.awt.event.MouseEvent;
 import static pw.netbox.common.Constans.BOARD_SIZE;
 
 public class ClientForm {
-    private static JFrame frame = new JFrame("Gomoky");
+    private static JFrame frame = new JFrame();
     private static JLabel messageLabel = new JLabel("");
 
     private static Square[][] board = new Square[BOARD_SIZE][BOARD_SIZE];
     private static Square currentSquare;
 
-    public static void initWindow() {
+    public static void initWindow(int roomNumber, Player player) {
+        frame.setTitle(String.valueOf(roomNumber));
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, "South");
         JPanel boardPanel = new JPanel();
@@ -28,7 +32,7 @@ public class ClientForm {
                 board[i][j].addMouseListener(new MouseAdapter() {
                     public void mousePressed(MouseEvent e) {
                         currentSquare = board[x][y];
-//                        out.println("MOVE (" + x + ',' + y + ")");
+                        player.sendMessage(new StandardOutputCommand(String.valueOf(x) + " " + String.valueOf(y) + "\n"));
                     }
                 });
                 boardPanel.add(board[i][j]);

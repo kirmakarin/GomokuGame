@@ -2,12 +2,16 @@ package pw.netbox.common;
 
 import pw.netbox.server.Game;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.List;
 
 public class Player implements Serializable {
     private transient static List<Game> games;
+    private transient Game game;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -80,6 +84,14 @@ public class Player implements Serializable {
 
     public static List<Game> getGames() {
         return games;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 
     public static void setGames(List<Game> games) {

@@ -6,7 +6,8 @@ import pw.netbox.common.Player;
 public class StandardOutputCommand extends Command {
     protected String text;
 
-    public StandardOutputCommand() {
+    public StandardOutputCommand(String text) {
+        this.text = text;
     }
 
     @Override
